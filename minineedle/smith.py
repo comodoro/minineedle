@@ -9,8 +9,8 @@ class SmithWaterman(OptimalAlignment[ItemToAlign]):
     Smith-Waterman algorithm
     """
 
-    def __init__(self, seq1: Sequence[ItemToAlign], seq2: Sequence[ItemToAlign]) -> None:
-        super().__init__(seq1, seq2)
+    def __init__(self, seq1: Sequence[ItemToAlign], seq2: Sequence[ItemToAlign], similarity_func: Callable[[Any, Any], float] | None=None) -> None:
+        super().__init__(seq1, seq2, simillarity_func)
 
     def _add_gap_penalties(self) -> None:
         """

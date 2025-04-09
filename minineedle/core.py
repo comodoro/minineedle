@@ -22,9 +22,10 @@ class AlignmentFormat(str, Enum):
 
 
 class OptimalAlignment(Generic[ItemToAlign]):
-    def __init__(self, seq1: Sequence[ItemToAlign], seq2: Sequence[ItemToAlign]) -> None:
+    def __init__(self, seq1: Sequence[ItemToAlign], seq2: Sequence[ItemToAlign], similarity_func: Callable[[Any, Any], float] | None=None) -> None:
         self.seq1 = seq1
         self.seq2 = seq2
+        self._similarity_func = similarity_func or (lambda x, y: 1 if x == y else -1)
         self._alseq1: list[ItemToAlign | Gap] = []
         self._alseq2: list[ItemToAlign | Gap] = []
         self.smatrix = ScoreMatrix(match=1, miss=-1, gap=-1)
@@ -203,10 +204,9 @@ class OptimalAlignment(Generic[ItemToAlign]):
                 topscore = self._nmatrix[irow][jcol + 1] + self.smatrix.gap
                 leftscore = self._nmatrix[irow + 1][jcol] + self.smatrix.gap
                 diagscore = self._nmatrix[irow][jcol]
-                if self.seq1[jcol] == self.seq2[irow]:
-                    diagscore += self.smatrix.match
-                else:
-                    diagscore += self.smatrix.miss
+                s = self._similarity_func(self.seq1[jcol], self.seq2[irow])
+                d = s * self.smatrix.match if s > 0 else -s * self.smatrix.miss
+                diagscore += d
 
                 self._check_best_score(diagscore, topscore, leftscore, irow, jcol)
 
@@ -247,6 +247,9 @@ class Gap(object):
     def __init__(self, character: str = "-") -> None:
         self.character = character
 
+    def __repr__(self) -> str:
+        return __str__(self)
+    
     def __str__(self) -> str:
         return str(self.character)
 
