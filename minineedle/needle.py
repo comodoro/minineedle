@@ -1,4 +1,4 @@
-from typing import Sequence
+from typing import Any, Callable, Optional, Sequence
 
 from minineedle.core import OptimalAlignment
 from minineedle.typesvars import ItemToAlign
@@ -9,8 +9,8 @@ class NeedlemanWunsch(OptimalAlignment[ItemToAlign]):
     Needleman Wunsch Alignment object. Takes two sequence objects (seq1 and seq2) and aligns them with the method align.
     """
 
-    def __init__(self, seq1: Sequence[ItemToAlign], seq2: Sequence[ItemToAlign], similarity_func: Callable[[Any, Any], float] | None=None) -> None:
-        super().__init__(seq1, seq2, simillarity_func)
+    def __init__(self, seq1: Sequence[ItemToAlign], seq2: Sequence[ItemToAlign], similarity_func: Optional[Callable[[Any, Any], float]]=None) -> None:
+        super().__init__(seq1, seq2, similarity_func)
 
     def _add_gap_penalties(self) -> None:
         """
