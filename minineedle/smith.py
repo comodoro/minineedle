@@ -45,14 +45,14 @@ class SmithWaterman(OptimalAlignment[ItemToAlign]):
 
         if diagscore >= topscore:
             if diagscore >= leftscore:
-                best_pointer, best_score = ("diag", diagscore)
+                best_pointer, best_score = (DIAG, diagscore)
             else:
-                best_pointer, best_score = ("left", leftscore)
+                best_pointer, best_score = (LEFT, leftscore)
         else:
             if topscore > leftscore:
-                best_pointer, best_score = ("up", topscore)
+                best_pointer, best_score = (UP, topscore)
             else:
-                best_pointer, best_score = ("left", leftscore)
+                best_pointer, best_score = (LEFT, leftscore)
 
         if best_score < 0:
             best_pointer = None

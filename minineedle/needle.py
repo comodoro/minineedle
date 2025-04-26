@@ -37,14 +37,14 @@ class NeedlemanWunsch(OptimalAlignment[ItemToAlign]):
         best_score = int()
         if diagscore >= topscore:
             if diagscore >= leftscore:
-                best_pointer, best_score = ("diag", diagscore)
+                best_pointer, best_score = (DIAG, diagscore)
             else:
-                best_pointer, best_score = ("left", leftscore)
+                best_pointer, best_score = (LEFT, leftscore)
         else:
             if topscore > leftscore:
-                best_pointer, best_score = ("up", topscore)
+                best_pointer, best_score = (UP topscore)
             else:
-                best_pointer, best_score = ("left", leftscore)
+                best_pointer, best_score = (LEFT, leftscore)
 
         self._pmatrix[irow + 1][jcol + 1] = best_pointer
         self._nmatrix[irow + 1][jcol + 1] = best_score

@@ -5,6 +5,7 @@ from typing import Any, Generic, Literal, Optional, Sequence, overload
 
 from minineedle.typesvars import ItemToAlign
 
+UP, LEFT, DIAG, NONE = 1, 2, 3, 0
 
 class ScoreMatrix:
     def __init__(self, match: int, miss: int, gap: int) -> None:
@@ -157,12 +158,11 @@ class OptimalAlignment(Generic[ItemToAlign]):
         the initial column with "up" pointers.
         """
         for row in self._pmatrix:
-            row[0] = "up"
+            row[0] = UP
 
         for jcol in range(0, len(self._pmatrix[0])):
-            self._pmatrix[0][jcol] = "left"
-
-        self._pmatrix[0][0] = None
+            self._pmatrix[0][jcol] = LEFT
+        self._pmatrix[0][0] = NONE
 
     def _add_gap_penalties(self) -> None:
         """
@@ -214,18 +214,18 @@ class OptimalAlignment(Generic[ItemToAlign]):
         self._alseq1, self._alseq2 = [], []
         
         while True:
-            if self._pmatrix[irow][jcol] == "diag":
+            if self._pmatrix[irow][jcol] == DIAG:
                 self._alseq1.append(self.seq1[jcol - 1])
                 self._alseq2.append(self.seq2[irow - 1])
                 if self.seq1[jcol - 1] == self.seq2[irow - 1]:
                     self._identity += 1
                 irow -= 1
                 jcol -= 1
-            elif self._pmatrix[irow][jcol] == "up":
+            elif self._pmatrix[irow][jcol] == UP:
                 self._alseq1.append(Gap(self._gap_character))
                 self._alseq2.append(self.seq2[irow - 1])
                 irow -= 1
-            elif self._pmatrix[irow][jcol] == "left":
+            elif self._pmatrix[irow][jcol] == LEFT:
                 self._alseq1.append(self.seq1[jcol - 1])
                 self._alseq2.append(Gap(self._gap_character))
                 jcol -= 1
