@@ -1,7 +1,7 @@
 from typing import Any, Callable, Optional, Sequence
 
 from minineedle.core import OptimalAlignment
-from minineedle.typesvars import ItemToAlign
+from minineedle.typesvars import ItemToAlign, UP, LEFT, DIAG, NONE
 
 
 class SmithWaterman(OptimalAlignment[ItemToAlign]):
@@ -40,7 +40,7 @@ class SmithWaterman(OptimalAlignment[ItemToAlign]):
         return imax, jmax
 
     def _check_best_score(self, diagscore: int, topscore: int, leftscore: int, irow: int, jcol: int) -> None:
-        best_pointer: Optional[str] = ""
+        best_pointer: Optional[str] = NONE
         best_score = 0
 
         if diagscore >= topscore:

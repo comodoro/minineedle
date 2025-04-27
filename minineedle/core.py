@@ -1,11 +1,11 @@
 from __future__ import annotations
 
+import numpy as np
 from enum import Enum
-from typing import Any, Generic, Literal, Optional, Sequence, overload
+from typing import Any, Callable, Generic, Literal, Optional, Sequence, overload
 
-from minineedle.typesvars import ItemToAlign
+from minineedle.typesvars import ItemToAlign, UP, LEFT, DIAG, NONE
 
-UP, LEFT, DIAG, NONE = 1, 2, 3, 0
 
 class ScoreMatrix:
     def __init__(self, match: int, miss: int, gap: int) -> None:
@@ -185,17 +185,17 @@ class OptimalAlignment(Generic[ItemToAlign]):
         """
         raise NotImplementedError("NeedlemanWunsch or SmithWaterman should be used instead!")
 
-    def _initialize_number_matrix(self) -> list[list[int]]:
+    def _initialize_number_matrix(self) -> np.ndarray:
         """
         Initializes the matrix where the computed scores are stored.
         """
-        return [[0 for x in range(len(self.seq1) + 1)] for x in range(len(self.seq2) + 1)]
+        return np.zeros((len(self.seq2) + 1, len(self.seq1) + 1), dtype=np.int32)
 
-    def _initialize_pointers_matrix(self) -> list[list[Optional[str]]]:
+    def _initialize_pointers_matrix(self) -> np.ndarray:
         """
         Initializes the matrix where the "up", "down", "diag" pointers are stored.
         """
-        return [[None for x in range(len(self.seq1) + 1)] for x in range(len(self.seq2) + 1)]
+        return np.zeros((len(self.seq2) + 1, len(self.seq1) + 1), dtype=np.int8)
 
     def _fill_matrices(self) -> None:
         for irow in range(0, len(self.seq2)):
@@ -248,7 +248,7 @@ class Gap(object):
         self.character = character
 
     def __repr__(self) -> str:
-        return __str__(self)
+        return str(self)
     
     def __str__(self) -> str:
         return str(self.character)

@@ -1,7 +1,7 @@
 from typing import Any, Callable, Optional, Sequence
 
 from minineedle.core import OptimalAlignment
-from minineedle.typesvars import ItemToAlign
+from minineedle.typesvars import ItemToAlign, UP, LEFT, DIAG, NONE
 
 
 class NeedlemanWunsch(OptimalAlignment[ItemToAlign]):
@@ -33,7 +33,7 @@ class NeedlemanWunsch(OptimalAlignment[ItemToAlign]):
         return imax, jmax
 
     def _check_best_score(self, diagscore: int, topscore: int, leftscore: int, irow: int, jcol: int) -> None:
-        best_pointer = str()
+        best_pointer = NONE
         best_score = int()
         if diagscore >= topscore:
             if diagscore >= leftscore:
@@ -42,7 +42,7 @@ class NeedlemanWunsch(OptimalAlignment[ItemToAlign]):
                 best_pointer, best_score = (LEFT, leftscore)
         else:
             if topscore > leftscore:
-                best_pointer, best_score = (UP topscore)
+                best_pointer, best_score = (UP, topscore)
             else:
                 best_pointer, best_score = (LEFT, leftscore)
 
